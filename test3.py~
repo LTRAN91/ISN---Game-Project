@@ -1,4 +1,7 @@
-import pygame
+Python 3.4.0 (default, Apr 11 2014, 13:05:11) 
+[GCC 4.8.2] on linux
+Type "copyright", "credits" or "license()" for more information.
+>>> import pygame
 from pygame.locals import *
 
 pygame.init()
@@ -76,14 +79,12 @@ class Level:
             num_ligne += 1
 
 
-nb_sprite_cote = 9
-taille_sprite = 25
-cote_fenetre = nb_sprite_cote * taille_sprite
 
-fond_accueil = "accueil.png"
-decor = "mur.jpeg"
-depart = "départ.jpeg"
-arrivee = "nemo.jpeg"
-    
+		
+
+	
+	
+	
+			    
 
 pygame.quit()    
