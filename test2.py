@@ -63,6 +63,16 @@ class Level:
                         ligne_level.append(lettre)
                 forme_level.append(ligne_level)
             self.forme = forme_level
+
+nb_sprite_cote = 9
+taille_sprite = 25
+cote_fenetre = nb_sprite_cote * taille_sprite
+
+fond_accueil = "accueil.png"
+decor = "mur.jpeg"
+depart = "départ.jpeg"
+arrivee = "nemo.jpeg"
+
         
 
 pygame.quit()    
