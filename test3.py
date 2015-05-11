@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Éditeur de Spyder
-
-Ceci est un script temporaire.
-"""
-
-import pygame
+Python 3.4.0 (default, Apr 11 2014, 13:05:11) 
+[GCC 4.8.2] on linux
+Type "copyright", "credits" or "license()" for more information.
+>>> import pygame
 from pygame.locals import *
 
 pygame.init()
@@ -64,16 +60,31 @@ class Level:
                 forme_level.append(ligne_level)
             self.forme = forme_level
 
-nb_sprite_cote = 9
-taille_sprite = 25
-cote_fenetre = nb_sprite_cote * taille_sprite
+    def affichage(self, fenetre):
+	    mur = pygame.image.load(image_mur).convert()
+	    depart = pygame.image.load(image_depart).convert()
+	    arrivee = pygame.image.load(image_arrivee).convert()
+	    num_ligne = 0
+	    for ligne in self.structure:
+		    num_case = 0
+		    x = num_case * taille.lettre
+		    y = num_ligne * taille.lettre
+		    if lettre == "d":
+			    fenetre.blit(depart,(x,y))			    
+                    elif lettre == "a":
+			    fenetre.blit(arrivee,(x,y))
+                    elif lettre == "m":
+			    fenetre.blit(mur,(x,y))
+                    num_case += 1
+            num_ligne += 1
 
-fond_accueil = "accueil.png"
-decor = "mur.jpeg"
-depart = "départ.jpeg"
-arrivee = "nemo.jpeg"
 
-        
+
+		
+
+	
+	
+	
+			    
 
 pygame.quit()    
-            
