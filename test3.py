@@ -42,12 +42,12 @@ while continuer:
     pygame.display.flip()
 
 class Level:
-    def __init__(self, fichier):
-        self.fichier = fichier
+    def __init__(self, niveau 1):
+        self.niveau 1 = niveau 1
         self.forme =  0
 
     def generer(self):
-        with open(self.fichier, 'r') as fichier:
+        with open(self.niveau 1, 'r') as niveau 1:
             forme_level = []
             for ligne in fichier:
                 ligne_level = []
@@ -63,22 +63,42 @@ class Level:
 	    arrivee = pygame.image.load(image_arrivee).convert()
 	    num_ligne = 0
 	    for ligne in self.structure:
-		    num_case = 0
-		    x = num_case * taille.lettre
-		    y = num_ligne * taille.lettre
-		    if lettre == "d":
-			    fenetre.blit(depart,(x,y))			    
-                    elif lettre == "a":
-			    fenetre.blit(arrivee,(x,y))
-                    elif lettre == "m":
-			    fenetre.blit(mur,(x,y))
-                    num_case += 1
+	        num_case = 0
+		x = num_case * taille.lettre
+		y = num_ligne * taille.lettre
+		if lettre == "d":
+		    fenetre.blit(depart,(x,y))			    
+                elif lettre == "a":
+		    fenetre.blit(arrivee,(x,y))
+                elif lettre == "m":
+		    fenetre.blit(mur,(x,y))
+                num_case += 1
             num_ligne += 1
 
+    class Personnage:
+        def init(self,unique,niveau):
+            self.unique = pygame.image.load(unique).convert_alpha()
 
-nb_sprite_cote = 9
-taille_sprite = 25
-cote_fenetre = nb_sprite_cote * taille_sprite
+            self.case_x = 0
+            self.case_y = 0
+            self.x = 0
+            self.y = 0
+
+            self.direction = self.unique
+            self.niveau = niveau
+
+        def move(self,direction):
+            if direction == "droite":
+                if self.case_x < (nombre_lettre_cote - 1):
+                    if self.niveau.structure[self.case_y][self.case_x + 1] != "m":
+                        self.case_x += 1
+                        self.x = self.case_x * taille_lettre
+                
+
+
+nb_lettre_cote = 9
+taille_lettre = 25
+cote_fenetre = nb_lettre_cote * taille_lettre
 
 fond_accueil = "accueil.png"
 decor = "mur.jpeg"
