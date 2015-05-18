@@ -15,7 +15,7 @@ fenetre.blit(fond, (0,0))
 #Chargement et collage du personnage
 perso = pygame.image.load("Happy.png").convert_alpha()
 position_perso = perso.get_rect()
-fenetre.blit(perso, (0,0))
+fenetre.blit(perso, (0,0)) # Coordonnées du perso,càd coin à gauche
 
 #Rafraichissement de l'écran
 pygame.display.flip()
@@ -23,26 +23,27 @@ pygame.display.flip()
 #Boucle infinie
 continuer = 1
 while continuer :
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == QUIT :
             continuer = 0
         if event.type == KEYDOWN:
-            if event.key == K_DOWN:  #Si "flèche bas"
-                #On descend le prsonnage
+            if event.key == K_DOWN:  # Si Flèche 'bas',le perso descend
                 position_perso = position_perso.move(0,3)
-            elif event.key == K_UP:
+            elif event.key == K_UP: # Le perso monte
                 position_perso = position_perso.move(0,-3)
-            elif event.key == K_LEFT:
+            elif event.key == K_LEFT: #Le perso va à gauche
                 position_perso = position_perso.move(-3,0)
-            elif event.key == K_RIGHT:
+            elif event.key == K_RIGHT: # Le perso va à droite
                 position_perso = position_perso.move(3,0)
 
     #Re-collage
-    fenetre.blit(fond, (0,0))
+    fenetre.blit(fond, (0,0)) 
     fenetre.blit(perso, position_perso)
-    #Rafraichissement
+    #Rafraichissement de la page
     pygame.display.flip()
 
+# Définition de la classe Niveau
 class Level:
 
     def __init__(self, niveau_1):
