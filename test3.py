@@ -1,3 +1,4 @@
+# Marque pour vérifier que le commit s'effectue bien.
 import pygame
 
 from pygame.locals import *
@@ -115,3 +116,4 @@ arrivee = "nemo.jpeg"
 pygame.quit()
         
         
+
