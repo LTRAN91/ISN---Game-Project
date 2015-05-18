@@ -63,17 +63,17 @@ class Level:
 	    arrivee = pygame.image.load(image_arrivee).convert()
 	    num_ligne = 0
 	    for ligne in self.structure:
-		    num_case = 0
+                num_case = 0
 		    x = num_case * taille.lettre
 		    y = num_ligne * taille.lettre
 		    if lettre == "d":
-			    fenetre.blit(depart,(x,y))			    
-                    elif lettre == "a":
+			    fenetre.blit(depart,(x,y))
+                elif lettre == "a":
 			    fenetre.blit(arrivee,(x,y))
-                    elif lettre == "m":
+                elif lettre == "m":
 			    fenetre.blit(mur,(x,y))
                     num_case += 1
-            num_ligne += 1
+          num_ligne += 1
 
 
 nb_sprite_cote = 9
