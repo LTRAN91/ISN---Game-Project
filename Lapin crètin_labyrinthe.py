@@ -1,4 +1,11 @@
+"""Jeu Lapin crétin labyrinthe.
+But du jeu: déplacer le lapin jusqu'au gâteau"""
+
 import pygame
+
+import time
+
+import sys
 
 from pygame.locals import *
 
@@ -10,37 +17,49 @@ taille_sprite = 30
 cote_fenetre = nb_sprite_cote * taille_sprite
 fenetre = pygame.display.set_mode((cote_fenetre, cote_fenetre))
 
-icone = pygame.image.load("LP_droite.jpg")
+#Icone du jeu
+icone = pygame.image.load("LP_bas.jpg")
 pygame.display.set_icon(icone)
 
-# Nom de la fênètre
-pygame.display.set_caption("Lapin Crètin")
+#Nom de la fenêtre
+pygame.display.set_caption("Lapin Crétin")
 
-class Niveau:
+"""Définition de la classe Niveau permettant de créer la structure du labyrinthe"""
+class Niveau: 
     def __init__(self, fichier):
         self.fichier = fichier
         self.structure = 0
 
+    """ méthode permettant de générer le niveau en fonction du fichier.
+    On crée une liste contenant une liste par ligne à afficher"""
     def generateur(self):
-        with open(self.fichier, "r") as fichier:
+        #Ouverture du fichier
+        with open(self.fichier, "r") as fichier: 
             structure_niveau = []
+            #Parcourt des lignes du fichier
             for ligne in fichier:
                 ligne_niveau = []
                 for sprite in ligne:
-                    if sprite != '\n': # on ignore les '\n'
-                        ligne_niveau.append(sprite)
+                    #Ajout du sprite à la liste de la ligne
+                    ligne_niveau.append(sprite)
+                #Ajout de la ligne à la structure du niveau
                 structure_niveau.append(ligne_niveau)
+            #Sauvegarde de la structure
             self.structure = structure_niveau
 
+    """Méthode permettant d'afficher le niveau en fonction de la liste renvoyée par generateur"""
     def affichage(self, fenetre):
+
+        #Chargement des images
         mur = pygame.image.load("mur.jpeg").convert()
         depart = pygame.image.load("debut.jpeg").convert()
-        arrivee = pygame.image.load("gateau.jpg").convert_alpha()
+        arrivee = pygame.image.load("gateau.jpg").convert()
 
+        #Parcourt de la iste du niveau
         num_ligne = 0
-        for ligne in self.structure:
+        for ligne in self.structure:  #Parcourt des listes de ligne
             num_case = 0
-            for sprite in ligne:
+            for sprite in ligne:  #Calcul de la position réelle en pixels
                 x = num_case * taille_sprite
                 y = num_ligne * taille_sprite
                 if sprite == 'd':
@@ -53,28 +72,33 @@ class Niveau:
                 num_case += 1
             num_ligne +=1
 
-
+"""Classe permettant de créer le personnage"""
 class Personnage:
 
-    def __init__(self, droite, gauche, haut, bas, level):
+    def __init__(self, droite, gauche, haut, bas, level):  #Sprites du personnage
         self.droite = pygame.image.load(droite).convert_alpha()
         self.gauche = pygame.image.load(gauche).convert_alpha()
         self.haut = pygame.image.load(haut).convert_alpha()
         self.bas = pygame.image.load(bas).convert_alpha()
+        #Position du personnage en cases et pixels
         self.case_x = 0
         self.case_y = 0
         self.x = 0
         self.y = 0
+        #Direction par défaut
         self.direction = self.droite
+        #Niveau dans lequel se trouve le personnage
         self.niveau = niveau
 
+    #Réglage des déplacements du personnage
     def deplacement(self, direction):
         if direction == 'droite':
-            if self.case_x < (nb_sprite_cote - 1):
+            if self.case_x < (nb_sprite_cote - 1): #Pour ne as dépasser l'écran
+                #Vérification si la case de destination n'est pas un mur
                 if self.niveau.structure[self.case_y][self.case_x +1] != 'm':
-                    self.case_x += 1
-                    self.x = self.case_x * taille_sprite
-            self.direction = self.droite
+                    self.case_x += 1 #Déplacement d'une case
+                    self.x = self.case_x * taille_sprite #Calcul de la position
+            self.direction = self.droite #Image dans la bonne direction
 
         if direction == 'gauche':
             if self.case_x > 0:
@@ -98,74 +122,96 @@ class Personnage:
                     self.case_y +=1
                     self.y = self.case_y * taille_sprite
             self.direction = self.bas
-                    
-                    
+
+"""Définition de 2 fonctions permettant d'afficher une image de fin de partie"""                
+def Gagné(x, y, image):
+    fenetre.blit(image, (x,y))
+
+def Message(m, couleur):
+    screen_text = font.render(m, False, couleur)
+    fenetre.blit(screen_text, [cote_fenetre / 2, cote_fenetre / 2])
 
 
-
-    
-        
 #Boucle principale
-continuer = 1
+continuer = True
 while continuer:
+    #Chargement et affichage de l'écran d'accueil
     presentation = pygame.image.load("accueil_1.jpg").convert()
     fenetre.blit(presentation, (0,0))
 
 
     pygame.display.flip() #Rafraichissement de la fenêtre
 
-    continuer_game = 1
-    continuer_presentation = 1
+    #Variables remises à condition à chaque tour de boucle
+    continuer_game = True
+    continuer_presentation = True
 
-
+    #Boucle d'accueil
     while continuer_presentation :
-        pygame.time.Clock().tick(30) #Limitation de la vitesse 
+        clock = pygame.time.Clock() #Limitation de la vitesse de la boucle
+        clock.tick(30)
 
         for event in pygame.event.get():
 
+            #Si le joueur quitte, on ne parcourt aucune boucle
             if event.type == QUIT or event.type == KEYDOWN and  event.key ==  K_ESCAPE :
-                continuer_presentation = 0
-                continuer_game = 0
-                continuer = 0
-                choix = 0
+                continuer_presentation = False
+                continuer_game = False
+                continuer = False
+
+                #Variable de choix du niveau
+                choix = False
+
             elif event.type == KEYDOWN:
+
+                #Lancement niveau 1
                 if event.key == K_F1:  
-                    continuer_presentation = 0
+                    continuer_presentation = False
                     choix = 'niveau_1'
+
+                #Lancement niveau 2
                 elif event.key == K_F2:
-                    continuer_presentation = 0
+                    continuer_presentation = False
                     choix = 'niveau_2'
 
+    #Vérification du choix du joueur
+    if choix != False:
 
-    if choix != 0:
-
+        #Chargement du fond principal
         fond = pygame.image.load("fond noir.png").convert()
+
+        #On génère un niveau à partir de la classe Niveau
         niveau = Niveau(choix)
         niveau.generateur()
         niveau.affichage(fenetre)
         
-        #Appel de la classe Personnage
+        #Création du perso grâce à la classe Personnage
         lapin_cretin = Personnage("LP_droite.jpg", "LP_gauche.jpg", "LP_haut.jpg", "LP_bas.jpg", niveau)
 
+    #Boucle de jeu
     while continuer_game:
-        pygame.time.Clock().tick(30)
-        
+    
+        #Limitation de la vitesse de la boucle
+        clock = pygame.time.Clock()
+        clock.tick(30)
+
         for event in pygame.event.get():
 
+            #Si le joueur quitte, on ferme la fenêtre
             if event.type == QUIT:
-                
-                continuer_game = 0
-                continuer = 0
+                continuer_game = False
+                continuer = False
                 
             elif event.type == KEYDOWN: # si l'évènement est enfoncement d'une touche
 
+                #Si le joueur presse Echap, on revient à la page d'accueil
                 if event.key == K_ESCAPE: 
-                    continuer_game = 0
+                    continuer_game = False
 
+                #Déplacements du personnage
                 elif event.key == K_RIGHT:
                     lapin_cretin.deplacement('droite')
-                    
-                            
+                                           
                 elif event.key == K_LEFT:
                     lapin_cretin.deplacement('gauche')
                    
@@ -174,32 +220,32 @@ while continuer:
         
                 elif event.key == K_DOWN:
                     lapin_cretin.deplacement('bas')
-                    
 
-
-        fenetre.blit(fond, (0,0))
+        #Chargement et affichage de l'image de fin de partie            
+        gagné = pygame.image.load("bingo.jpg").convert_alpha()
+        font = pygame.font.SysFont('showcard gothic', 50)  #Module pour la police et la taille
+        noir = (0,0,0)  #Code couleur selon le codage rouge, vert, bleu
+        
+        #Affichage aux nouvelles positions
+        fenetre.blit(fond, (0,0)) 
         niveau.affichage(fenetre)
         fenetre.blit(lapin_cretin.direction, (lapin_cretin.x, lapin_cretin.y))
-        pygame.display.flip()
-
-        def Gagné(x,y,image):
-            fenetre.blit(image, (x,y))
-        gagné = pygame.image.load("bingo.jpg").convert_alpha()
+        pygame.display.flip()  #Rafraichissement de la fenêtre
 
         if niveau.structure[lapin_cretin.case_y][lapin_cretin.case_x] == 'a':
-            bleu = (113,177,227)
-            
-            fenetre.fill(bleu)
-            x = 200
-            y = 200
-            Gagné(x,y,gagné)
-            pygame.display.flip()
-            time = pygame.time.Clock()
-            time.tick(1)
+            clock = pygame.time.Clock()
+            clock.tick(30)
 
-            for event in pygame.event.get():
-                if event.type == KEYDOWN:
-                    continuer_game = 0
+            bleu = (113,177,227)
+            fenetre.fill(bleu) #méthode permettant d'afficher la couleur
+            x = 0
+            y = 10
+            Gagné(x,y,gagné) #appel fonction Gagné
+            Message("Gagné !", noir) # appel fonction Message
+            pygame.display.flip()  #Rafraichissement de la fenêtre
+            time.sleep(6) #Module définissant le nombre de secondes qui passent entre la fin de la partie et le retour à l'accueil
+
+            continuer_game = False
 
 
 
