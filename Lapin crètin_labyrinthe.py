@@ -8,12 +8,12 @@ pygame.init()
 nb_sprite_cote = 15
 taille_sprite = 30
 cote_fenetre = nb_sprite_cote * taille_sprite
-
 fenetre = pygame.display.set_mode((cote_fenetre, cote_fenetre))
 
 icone = pygame.image.load("LP_droite.jpg")
 pygame.display.set_icon(icone)
 
+# Nom de la fênètre
 pygame.display.set_caption("Lapin Crètin")
 
 class Niveau:
@@ -27,7 +27,7 @@ class Niveau:
             for ligne in fichier:
                 ligne_niveau = []
                 for sprite in ligne:
-                    if sprite != '\n':
+                    if sprite != '\n': # on ignore les '\n'
                         ligne_niveau.append(sprite)
                 structure_niveau.append(ligne_niveau)
             self.structure = structure_niveau
@@ -112,14 +112,14 @@ while continuer:
     fenetre.blit(presentation, (0,0))
 
 
-    pygame.display.flip()
+    pygame.display.flip() # Méthode permettant le rafraichissement
 
     continuer_game = 1
     continuer_presentation = 1
 
 
     while continuer_presentation :
-        pygame.time.Clock().tick(30)
+        pygame.time.Clock().tick(30) #méthode permettant de limiter la vitesse 
 
         for event in pygame.event.get():
 
@@ -143,7 +143,8 @@ while continuer:
         niveau = Niveau(choix)
         niveau.generateur()
         niveau.affichage(fenetre)
-
+        
+        #Appel de la classe Personnage
         lapin_cretin = Personnage("LP_droite.jpg", "LP_gauche.jpg", "LP_haut.jpg", "LP_bas.jpg", niveau)
 
     while continuer_game:
@@ -156,9 +157,9 @@ while continuer:
                 continuer_game = 0
                 continuer = 0
                 
-            elif event.type == KEYDOWN:
+            elif event.type == KEYDOWN: # si l'évènement est enfoncement d'une touche
 
-                if event.key == K_ESCAPE:
+                if event.key == K_ESCAPE: 
                     continuer_game = 0
 
                 elif event.key == K_RIGHT:
@@ -181,14 +182,30 @@ while continuer:
         fenetre.blit(lapin_cretin.direction, (lapin_cretin.x, lapin_cretin.y))
         pygame.display.flip()
 
+        def Gagné(x,y,image):
+            fenetre.blit(image, (x,y))
+        gagné = pygame.image.load("bingo.jpg").convert_alpha()
+
         if niveau.structure[lapin_cretin.case_y][lapin_cretin.case_x] == 'a':
-            continuer_game = 0
+            bleu = (113,177,227)
+            
+            fenetre.fill(bleu)
+            x = 200
+            y = 200
+            Gagné(x,y,gagné)
+            pygame.display.flip()
+            time = pygame.time.Clock()
+            time.tick(1)
+
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    continuer_game = 0
 
 
 
 pygame.quit()
+quit()
                 
-
     
         
     
